@@ -1,0 +1,12 @@
+# Environments
+node_modules/
+Gemini/
+venv/
+.env
+
+# Mac system files
+.DS_Store
+
+# Python cache
+__pycache__/
+*.pyc
