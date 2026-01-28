@@ -9,34 +9,48 @@ function App() {
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
   const [audioURL, setAudioURL] = useState(null);
-  const mediaRecorderRef = React.useRef(null);
-
+  
   const [evaluation, setEvaluation] = useState(null);
 
-  const startRecording = async () => {
-    setIsRecording(true);
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorderRef.current = new MediaRecorder(stream);
-    const audioChunks = [];
+  const mediaRecorderRef = React.useRef(null);
 
-    mediaRecorderRef.current.ondataavailable = event => audioChunks.push(event.data);
-    mediaRecorderRef.current.onstop = () => {
+  const startRecording = async () => {
+    try{
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      const audioChunks = [];
+
+      mediaRecorderRef.current.ondataavailable = event => {
+        if (event.data.size > 0){
+          audioChunks.push(event.data);
+        }
+      };
+      mediaRecorderRef.current.onstop = () => {
       const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
       setAudioBlob(audioBlob);
       setAudioURL(URL.createObjectURL(audioBlob));
     };
-
     mediaRecorderRef.current.start();
+    setIsRecording(true);
+    setEvaluation(null);
+    }
+    catch (err){
+      console.error("Error accessing microphone:", err);
+      alert("Could not access microphone. Please check permissions.");
+    }
   };
 
   const stopRecording = () => {
-    mediaRecorderRef.current.stop();
-    setIsRecording(false);
+    if (mediaRecorderRef.current && isRecording){
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
   };
 
   const handleStart = async () => {
     // Call backend API to set context 
     console.log("Starting interview for:", interviewGoal);
+    setEvaluation(null); // Reset previous evaluation
   };
 
   return (
@@ -46,7 +60,7 @@ function App() {
       {/* Input Section: Week 3 Focus  */}
       <section>
         <h3>Step 1: Set Your Goal</h3>
-        <select onChange={(e) => setInterviewGoal(e.target.value)}>
+        <select value={interviewGoal} onChange={(e) => setInterviewGoal(e.target.value)}>
           <option value="">Select Interview Type</option>
           <option value="university">University</option>
           <option value="club">Club</option>
@@ -60,6 +74,24 @@ function App() {
         <input type="file" accept=".pdf,.doc" />
         
         <h3 style={{ marginTop: '10px' }}>Step 3: Audio/Text Input</h3>
+        <div style={{ marginBottom: '15px' }}>
+          {!isRecording ? (
+            <button onClick={startRecording} style={{backgroundColor: '#28a745'}}>
+              🎤 Start Recording
+            </button>
+          ) : (
+            <button onClick={stopRecording} style={{backgroundColor: '#dc3545'}}>
+              ⏹ Stop Recording
+            </button>
+          )}
+          
+          {/* Playback */}
+          {audioURL && (
+            <div style={{ marginTop: '10px' }}>
+              <audio src={audioURL} controls />
+            </div>
+          )}
+        </div>
         <textarea placeholder="Paste interview questions or your response here..." />
         <button onClick={handleStart}>Submit for Evaluation</button>
       </section>
