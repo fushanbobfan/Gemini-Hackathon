@@ -59,8 +59,8 @@ lsof -i :5002
 
 ### Terminal 1: Backend
 ```bash
-cd /Users/alinaliu18/Gemini-Hackathon
-export GEMINI_API_KEY="AIzaSyDUoc7599BzMBMZYnmhMeSPx-mwxfJlH3E"
+cd path/to/project
+export GEMINI_API_KEY="your-api-key-here"
 python backend.py
 ```
 

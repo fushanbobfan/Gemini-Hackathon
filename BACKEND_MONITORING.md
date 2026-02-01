@@ -45,21 +45,21 @@ curl -X POST http://localhost:5002/api/evaluate \
 
 ### Standard Start
 ```bash
-cd /Users/alinaliu18/Gemini-Hackathon
-export GEMINI_API_KEY="AIzaSyDUoc7599BzMBMZYnmhMeSPx-mwxfJlH3E"
+cd path/to/project
+export GEMINI_API_KEY="your-api-key-here"
 python backend.py
 ```
 
 ### Background Start
 ```bash
-cd /Users/alinaliu18/Gemini-Hackathon
-GEMINI_API_KEY="AIzaSyDUoc7599BzMBMZYnmhMeSPx-mwxfJlH3E" python backend.py &
+cd path/to/project
+GEMINI_API_KEY="your-api-key-here" python backend.py &
 ```
 
 ### With Logging
 ```bash
-cd /Users/alinaliu18/Gemini-Hackathon
-GEMINI_API_KEY="AIzaSyDUoc7599BzMBMZYnmhMeSPx-mwxfJlH3E" python backend.py > backend.log 2>&1 &
+cd path/to/project
+GEMINI_API_KEY="your-api-key-here" python backend.py > backend.log 2>&1 &
 tail -f backend.log
 ```
 
@@ -91,13 +91,14 @@ lsof -i :5002
 lsof -ti :5002 | xargs kill -9
 
 # Restart backend
-GEMINI_API_KEY="AIzaSyDUoc7599BzMBMZYnmhMeSPx-mwxfJlH3E" python backend.py
+export GEMINI_API_KEY="your-api-key-here"
+python backend.py
 ```
 
 ### Issue: "GEMINI_API_KEY not found"
 ```bash
 # Make sure to export the API key
-export GEMINI_API_KEY="AIzaSyDUoc7599BzMBMZYnmhMeSPx-mwxfJlH3E"
+export GEMINI_API_KEY="your-api-key-here"
 
 # Verify it's set
 echo $GEMINI_API_KEY
