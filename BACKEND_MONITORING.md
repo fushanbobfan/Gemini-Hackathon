@@ -110,13 +110,13 @@ echo $GEMINI_API_KEY
 curl http://localhost:5002/api/health
 
 # If not, start it with API key
-cd /Users/alinaliu18/Gemini-Hackathon
-GEMINI_API_KEY="AIzaSyDUoc7599BzMBMZYnmhMeSPx-mwxfJlH3E" python backend.py
+cd /path/to/project
+GEMINI_API_KEY="your-api-key-here" python backend.py
 ```
 
 ## 📊 Backend Configuration
 
-**File**: `/Users/alinaliu18/Gemini-Hackathon/backend.py`
+**File**: `/path/to/project/backend.py`
 
 **Key Settings:**
 - Port: `5002`
@@ -189,7 +189,7 @@ audio_response=audio.wav (optional)
 
 ## 📍 File Locations
 
-- **Backend Script**: `/Users/alinaliu18/Gemini-Hackathon/backend.py`
+- **Backend Script**: `/path/to/project/backend.py`
 - **Logs**: Look for output in terminal or create `backend.log`
 - **Environment Config**: Set `GEMINI_API_KEY` in shell before starting
 
@@ -199,7 +199,7 @@ audio_response=audio.wav (optional)
 2. **Use background start** with `&` if you need terminal for other tasks
 3. **Create alias** for faster startup:
    ```bash
-   alias start-backend='cd /Users/alinaliu18/Gemini-Hackathon && GEMINI_API_KEY="AIzaSyDUoc7599BzMBMZYnmhMeSPx-mwxfJlH3E" python backend.py'
+   alias start-backend='cd /path/to/project && GEMINI_API_KEY="your-api-key-here" python backend.py'
    ```
 4. **Monitor with watch** command (if available):
    ```bash

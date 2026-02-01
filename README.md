@@ -1,126 +1,180 @@
 README - AI Interview Prep Tool
 
-QUICK START
+Getting Started
 
 1. Clone repository
    git clone https://github.com/MwMwM-2428/Gemini-Hackathon.git
    cd Gemini-Hackathon
 
-2. Get API key
+2. Get your API key
    Go to: https://aistudio.google.com/app/apikey
-   Create new API key (free)
+   Click "Create API key" (free, takes 30 seconds)
 
-3. Setup
+3. Setup the project
    cp .env.example .env
-   Edit .env and add your API key
+   Edit .env and paste your API key
    pip install -r requirements.txt
 
-4. Run backend (Terminal 1)
+4. Start the backend (open Terminal 1)
    source .env
    python backend.py
+   
+   You should see: "Running on http://127.0.0.1:5002"
 
-5. Run frontend (Terminal 2)
+5. Start the frontend (open Terminal 2)
    python -m http.server 3000
+   
+   You should see: "Serving HTTP on 0.0.0.0 port 3000"
 
-6. Open browser
+6. Open in your browser
    http://localhost:3000
+   
+   Ready to use
 
 
-FEATURES
+What This Does
 
-- Audio recording and playback
-- File upload (resume/job description)
-- Text input for responses
-- AI-powered evaluation with scoring
-- Detailed feedback metrics
-- Responsive web interface
+- Record audio answers to interview questions
+- Upload your resume or job description as context
+- Type written responses if you prefer
+- Get AI-powered feedback with a score
+- See detailed metrics on your performance
 
 
-SYSTEM REQUIREMENTS
+What You Need
 
-- Python 3.8+
+- Python 3.8 or higher
 - Google Gemini API key (free)
-- Modern web browser
-- Port 5002 and 3000 available
+- Any modern web browser
+- Ports 5002 and 3000 available
 
 
-PROJECT STRUCTURE
+How It Works
 
-backend.py                  Flask API server (port 5002)
-index.html                  Web interface
-App.css                     Styling
-Frontend.jsx / Frontend.js  Component versions
-requirements.txt            Python dependencies
-environment.yml             Conda environment
-.env.example               Environment template
+Backend: Flask API running on port 5002
+Frontend: Web interface on port 3000
+AI: Google Gemini model evaluates your responses
+Storage: Everything runs locally, no database
 
 
-CONFIGURATION
+Project Files
 
-Copy .env.example to .env:
+backend.py              Main Flask server
+index.html              The web interface you interact with
+App.css                 Styling for the interface
+Frontend.jsx            React component version
+Frontend.js             JavaScript component version
+requirements.txt        Python libraries needed
+environment.yml         Conda environment setup
+.env.example           Template for your configuration
+
+
+Configuration
+
+Copy the example environment file:
    cp .env.example .env
 
-Edit .env and set:
-   GEMINI_API_KEY=your_key_here
+Edit .env and add your actual API key:
+   GEMINI_API_KEY=your_api_key_goes_here
    FLASK_ENV=development
    BACKEND_PORT=5002
    FRONTEND_PORT=3000
 
-IMPORTANT: Never commit .env file. It's in .gitignore.
+Important: The .env file is in .gitignore so it will never be committed to GitHub.
 
 
-API ENDPOINTS
+API Endpoints
 
 GET /api/health
-Check if backend is running
-Response: {"status": "Backend is running!", "port": 5002}
+   Used to check if the backend is running
+   Returns: {"status": "Backend is running!", "port": 5002}
 
 POST /api/evaluate
-Submit interview response for evaluation
-Parameters:
-- goal: "university", "club", or "job_tech"
-- text_input: User's response (string)
-- context_text: Interview context (optional)
-- file: Resume PDF (optional)
-- audio_response: Audio file (optional)
+   Sends your response for evaluation
+   Accepts: goal, text_input, context_text, file (optional), audio_response (optional)
+   Returns: score, evaluation text, and detailed metrics
 
 
-TROUBLESHOOTING
+Common Problems and Fixes
 
-Port already in use (5002)
+Port 5002 already in use
    lsof -ti :5002 | xargs kill -9
 
-Port already in use (3000)
+Port 3000 already in use
    lsof -ti :3000 | xargs kill -9
 
 Backend not responding
    curl http://localhost:5002/api/health
+   Should return JSON if it's working
 
-API key not working
-   Check .env file has correct key
-   Verify key is enabled in Google Cloud
+API key not valid
+   Make sure your .env file has the correct key
+   Restart the backend after updating it
+   Check that the key is still active in Google Cloud
+
+Backend takes a long time to start
+   Normal on first run. Just wait or restart.
+
+Can't record audio
+   Check your browser permissions
+   Try a different browser if issues continue
 
 
-FOR TEAM MEMBERS
+Checking the Backend
 
-1. Clone the repo
-2. Copy .env.example to .env
-3. Add your own Google API key to .env
-4. Run: pip install -r requirements.txt
-5. Terminal 1: source .env && python backend.py
-6. Terminal 2: python -m http.server 3000
+See if it's running:
+   ps aux | grep "python backend.py"
+
+Check if port is listening:
+   lsof -i :5002
+
+Test the health endpoint:
+   curl http://localhost:5002/api/health
+
+Kill the process:
+   ps aux | grep "python backend.py" | awk '{print $2}' | xargs kill
+
+
+Setup for Team Members
+
+Here's what each person needs to do:
+
+1. Clone the repository
+   git clone https://github.com/MwMwM-2428/Gemini-Hackathon.git
+   cd Gemini-Hackathon
+
+2. Get your own API key
+   Free from https://aistudio.google.com/app/apikey
+
+3. Create your environment file
+   cp .env.example .env
+   Add your API key to .env
+
+4. Install dependencies
+   pip install -r requirements.txt
+
+5. Run the backend
+   source .env
+   python backend.py
+
+6. Run the frontend (new terminal)
+   python -m http.server 3000
+
 7. Open http://localhost:3000
 
-IMPORTANT: Never commit .env file. Each person uses their own API key.
+Important reminders:
+   Each person must use their own API key
+   Never commit the .env file to GitHub
+   Keep your API key private - don't share it in Slack or email
 
 
-DOCUMENTATION REFERENCE
+Additional Documentation
 
-Backend monitoring: See BACKEND_MONITORING.md
-Extended setup: See SETUP.md
-Implementation details: See SETUP_AND_FIX_SUMMARY.md
+For monitoring the backend: See BACKEND_MONITORING.md
+For extended setup instructions: See SETUP.md
+For technical implementation details: See SETUP_AND_FIX_SUMMARY.md
 
 
-LICENSE
+License
 
-Add your license information here
+Add license information here

@@ -1,0 +1,185 @@
+README - AI Interview Prep Tool
+
+QUICK START
+
+1. Clone repository
+   git clone https://github.com/MwMwM-2428/Gemini-Hackathon.git
+   cd Gemini-Hackathon
+
+2. Get API key
+   Go to: https://aistudio.google.com/app/apikey
+   Create new API key (free)
+
+3. Setup
+   cp .env.example .env
+   Edit .env and add your API key
+   pip install -r requirements.txt
+
+4. Run backend (Terminal 1)
+   source .env
+   python backend.py
+
+5. Run frontend (Terminal 2)
+   python -m http.server 3000
+
+6. Open browser
+   http://localhost:3000
+
+
+FEATURES
+
+- Audio recording and playback
+- File upload (resume/job description)
+- Text input for responses
+- AI-powered evaluation with scoring
+- Detailed feedback metrics
+- Responsive web interface
+
+
+SYSTEM REQUIREMENTS
+
+- Python 3.8+
+- Google Gemini API key (free)
+- Modern web browser
+- Port 5002 and 3000 available
+
+
+PROJECT STRUCTURE
+
+backend.py                  Flask API server (port 5002)
+index.html                  Web interface
+App.css                     Styling
+Frontend.jsx / Frontend.js  Component versions
+requirements.txt            Python dependencies
+environment.yml             Conda environment
+.env.example               Environment template
+
+
+CONFIGURATION
+
+Environment variables are managed via .env file:
+
+Copy .env.example to .env:
+   cp .env.example .env
+
+Edit .env and set:
+   GEMINI_API_KEY=your_key_here
+   FLASK_ENV=development
+   BACKEND_PORT=5002
+   FRONTEND_PORT=3000
+
+IMPORTANT: Never commit .env file. It's in .gitignore.
+
+
+API ENDPOINTS
+
+GET /api/health
+Check if backend is running
+Response: {"status": "Backend is running!", "port": 5002}
+
+POST /api/evaluate
+Submit interview response for evaluation
+Parameters:
+- goal: "university", "club", or "job_tech"
+- text_input: User's response (string)
+- context_text: Interview context (optional)
+- file: Resume PDF (optional)
+- audio_response: Audio file (optional)
+
+Response:
+{
+  "score": 0-100,
+  "evaluation": "detailed feedback",
+  "metrics": {
+    "filler_word_count": "...",
+    "tone_analysis": "...",
+    "pacing": "...",
+    "confidence": "...",
+    "clarity": "...",
+    "stutters": "...",
+    "engagement": "...",
+    "professionalism": "...",
+    "additional_qualities": "..."
+  }
+}
+
+
+TROUBLESHOOTING
+
+Port already in use (5002)
+   lsof -ti :5002 | xargs kill -9
+
+Port already in use (3000)
+   lsof -ti :3000 | xargs kill -9
+
+Backend not responding
+   curl http://localhost:5002/api/health
+   Should return JSON with status
+
+API key not working
+   Check .env file has correct key
+   Verify key is enabled in Google Cloud Console
+   Restart backend after changing key
+
+Backend slow to start
+   Normal on first run. Restart if needed.
+
+Can't record audio
+   Check browser microphone permissions
+   Try different browser if issues persist
+
+
+MONITORING BACKEND
+
+Check if running:
+   ps aux | grep "python backend.py"
+
+Check port is listening:
+   lsof -i :5002
+
+Test health endpoint:
+   curl http://localhost:5002/api/health
+
+Kill specific process:
+   ps aux | grep "python backend.py" | awk '{print $2}' | xargs kill
+
+Start with logging:
+   python backend.py > backend.log 2>&1
+
+
+FOR TEAM MEMBERS
+
+1. Clone the repo
+2. Copy .env.example to .env
+3. Add your own Google API key to .env
+4. Run: pip install -r requirements.txt
+5. Terminal 1: source .env && python backend.py
+6. Terminal 2: python -m http.server 3000
+7. Open http://localhost:3000
+
+IMPORTANT NOTES:
+- Each person needs their own API key (free from Google)
+- Never commit your .env file
+- Keep your API key private
+- Don't share API key in Slack, email, etc
+
+
+DOCUMENTATION REFERENCE
+
+This is the main README. For detailed information:
+
+Backend monitoring: See BACKEND_MONITORING.md
+Extended setup: See SETUP.md
+Implementation details: See SETUP_AND_FIX_SUMMARY.md
+Conda setup: See environment.yml
+
+
+LICENSE
+
+Add your license information here
+
+
+SUPPORT
+
+Check the documentation files if you have issues.
+Common questions answered in the sections above.
