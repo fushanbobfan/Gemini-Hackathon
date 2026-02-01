@@ -1,4 +1,3 @@
-// Frontend.jsx - AI Interview Prep Tool
 import React, { useState } from 'react';
 import './App.css';
 
@@ -111,7 +110,7 @@ function App() {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="app">
@@ -285,7 +284,6 @@ function App() {
       </main>
     </div>
   );
-}
 }
 
 export default App;

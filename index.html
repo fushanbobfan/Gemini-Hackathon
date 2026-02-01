@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Prep Tool</title>
+    <style>
+        /* Morandi Color Palette */
+        :root {
+            --morandi-sage: #9ba89d;
+            --morandi-mauve: #a89ac7;
+            --morandi-terracotta: #b39486;
+            --morandi-dust-blue: #8b9fb8;
+            --morandi-cream: #f5f3f0;
+            --morandi-warm-gray: #d4cac8;
+            --text-primary: #3d3d3d;
+            --text-secondary: #6b6b6b;
+            --bg-primary: #faf8f5;
+            --border-color: #e8e4e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #faf8f5 0%, #f5f3f0 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            background: linear-gradient(180deg, rgba(155, 168, 157, 0.08) 0%, rgba(168, 154, 199, 0.08) 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: var(--text-secondary);
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .form-section {
+            background: white;
+            padding: 30px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .form-section h2 {
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        select, textarea, input[type="file"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1em;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        select:focus, textarea:focus, input[type="file"]:focus {
+            outline: none;
+            border-color: var(--morandi-sage);
+            box-shadow: 0 0 0 3px rgba(155, 168, 157, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--morandi-sage);
+            color: white;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .btn-primary:hover {
+            background-color: #8a9a8f;
+            box-shadow: 0 4px 12px rgba(155, 168, 157, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: var(--morandi-terracotta);
+            color: white;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .btn-danger:hover {
+            background-color: #a17d6f;
+            box-shadow: 0 4px 12px rgba(179, 148, 134, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--morandi-sage) 0%, var(--morandi-dust-blue) 100%);
+            color: white;
+            width: 100%;
+            padding: 14px 32px;
+            font-size: 1.05em;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            box-shadow: 0 6px 20px rgba(155, 168, 157, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .audio-player {
+            width: 100%;
+            margin-top: 10px;
+            height: 40px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+            background-color: var(--morandi-cream);
+        }
+
+        .alert-error {
+            border-left-color: var(--morandi-terracotta);
+            color: var(--morandi-terracotta);
+        }
+
+        .alert-success {
+            border-left-color: var(--morandi-sage);
+            color: var(--morandi-sage);
+        }
+
+        .results {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .score-display {
+            text-align: center;
+            margin: 30px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(155, 168, 157, 0.08) 0%, rgba(168, 154, 199, 0.08) 100%);
+            border-radius: 12px;
+        }
+
+        .score-number {
+            font-size: 4em;
+            font-weight: 700;
+            color: var(--morandi-sage);
+        }
+
+        .score-max {
+            font-size: 0.3em;
+            color: var(--text-secondary);
+        }
+
+        .score-bar {
+            height: 12px;
+            background-color: var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--morandi-sage) 0%, var(--morandi-mauve) 100%);
+            transition: width 1s ease;
+        }
+
+        .evaluation-box {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: var(--morandi-cream);
+            border-radius: 8px;
+            border-left: 4px solid var(--morandi-sage);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .metric-item {
+            padding: 15px;
+            background-color: #f9f7f4;
+            border-radius: 8px;
+            border-left: 3px solid var(--morandi-mauve);
+        }
+
+        .metric-label {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            color: var(--morandi-sage);
+            font-size: 1em;
+        }
+
+        .or-divider {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .or-divider::before, .or-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .or-divider::before {
+            left: 0;
+        }
+
+        .or-divider::after {
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>AI Interview Prep Tool</h1>
+        <p class="subtitle">Master your interview responses with AI coaching</p>
+    </div>
+
+    <div class="container">
+        <form id="interviewForm" class="form-section">
+            <h2>📝 Interview Configuration</h2>
+            
+            <div class="form-group">
+                <label for="goal">Interview Goal:</label>
+                <select id="goal" required>
+                    <option value="">Select interview type...</option>
+                    <option value="university">University Interview</option>
+                    <option value="club">Club/Organization Interview</option>
+                    <option value="job_tech">Tech Job Interview</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="file">Resume/Job Description (Optional):</label>
+                <input type="file" id="file" accept=".pdf,.doc,.docx">
+            </div>
+
+            <div class="form-group">
+                <label for="contextText">Context/Notes (Optional):</label>
+                <textarea id="contextText" placeholder="Add interview questions or additional context..."></textarea>
+            </div>
+
+            <h2 style="margin-top: 30px;">🎙️ Your Response</h2>
+
+            <h3 style="margin-top: 20px;">Record Audio:</h3>
+            <div class="button-group">
+                <button type="button" id="recordBtn" class="btn-primary">🎤 Start Recording</button>
+                <button type="button" id="stopBtn" class="btn-danger" disabled style="display:none;">⏹ Stop Recording</button>
+            </div>
+            <audio id="audioPlayback" class="audio-player" controls style="display:none;"></audio>
+
+            <div class="or-divider">OR</div>
+
+            <div class="form-group">
+                <label for="textInput">Or Write Your Response:</label>
+                <textarea id="textInput" placeholder="Type your interview response here..."></textarea>
+            </div>
+
+            <div id="errorMsg" class="alert alert-error" style="display:none;"></div>
+            <button type="submit" class="btn-submit" id="submitBtn">✨ Get Evaluation</button>
+        </form>
+
+        <div id="results" class="results">
+            <h2>Your Evaluation Results</h2>
+            
+            <div class="score-display">
+                <div class="score-number"><span id="scoreValue">0</span><span class="score-max">/100</span></div>
+                <div class="score-bar">
+                    <div class="score-fill" id="scoreFill" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <div class="evaluation-box">
+                <h3>Overall Feedback</h3>
+                <p id="evaluation"></p>
+            </div>
+
+            <div id="metricsContainer"></div>
+
+            <button type="button" id="resetBtn" class="btn-submit">← Try Another Response</button>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5002';
+        let mediaRecorder = null;
+        let audioChunks = [];
+
+        const recordBtn = document.getElementById('recordBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const audioPlayback = document.getElementById('audioPlayback');
+        const form = document.getElementById('interviewForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const errorMsg = document.getElementById('errorMsg');
+        const resultsDiv = document.getElementById('results');
+        const resetBtn = document.getElementById('resetBtn');
+
+        recordBtn.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    audioPlayback.src = audioUrl;
+                    audioPlayback.style.display = 'block';
+                };
+
+                mediaRecorder.start();
+                recordBtn.style.display = 'none';
+                stopBtn.style.display = 'block';
+                stopBtn.disabled = false;
+                errorMsg.style.display = 'none';
+            } catch (err) {
+                showError('Could not access microphone. Please check permissions.');
+            }
+        });
+
+        stopBtn.addEventListener('click', () => {
+            mediaRecorder.stop();
+            recordBtn.style.display = 'block';
+            stopBtn.style.display = 'none';
+            stopBtn.disabled = true;
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMsg.style.display = 'none';
+            resultsDiv.classList.remove('show');
+
+            const goal = document.getElementById('goal').value;
+            const textInput = document.getElementById('textInput').value;
+
+            if (!goal) {
+                showError('Please select an interview goal');
+                return;
+            }
+
+            if (!textInput && audioChunks.length === 0) {
+                showError('Please provide either text or audio response');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Evaluating...';
+
+            try {
+                const formData = new FormData();
+                formData.append('goal', goal);
+                formData.append('sub_type', 'Interview');
+                formData.append('text_input', textInput);
+                formData.append('context_text', document.getElementById('contextText').value);
+
+                const fileInput = document.getElementById('file');
+                if (fileInput.files.length > 0) {
+                    formData.append('file', fileInput.files[0]);
+                }
+
+                if (audioChunks.length > 0) {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    formData.append('audio_response', audioBlob, 'audio.wav');
+                }
+
+                const response = await fetch(`${API_BASE_URL}/api/evaluate`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.evaluation || `Server error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                displayResults(data);
+                
+                // Clear form
+                document.getElementById('textInput').value = '';
+                audioChunks = [];
+                audioPlayback.style.display = 'none';
+            } catch (err) {
+                showError(`Failed to evaluate: ${err.message}`);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '✨ Get Evaluation';
+            }
+        });
+
+        function showError(message) {
+            errorMsg.textContent = '⚠️ ' + message;
+            errorMsg.style.display = 'block';
+        }
+
+        function displayResults(data) {
+            document.getElementById('scoreValue').textContent = data.score;
+            document.getElementById('evaluation').textContent = data.evaluation;
+            
+            const scoreFill = document.getElementById('scoreFill');
+            scoreFill.style.width = data.score + '%';
+
+            if (data.metrics) {
+                const metricsHtml = '<h3>Detailed Metrics</h3><div class="metrics-grid">' +
+                    Object.entries(data.metrics)
+                        .map(([key, value]) => `
+                            <div class="metric-item">
+                                <div class="metric-label">${key.replace(/_/g, ' ').toUpperCase()}</div>
+                                <div class="metric-value">${value}</div>
+                            </div>
+                        `)
+                        .join('') +
+                    '</div>';
+                document.getElementById('metricsContainer').innerHTML = metricsHtml;
+            }
+
+            resultsDiv.classList.add('show');
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        resetBtn.addEventListener('click', () => {
+            resultsDiv.classList.remove('show');
+            audioChunks = [];
+            audioPlayback.style.display = 'none';
+            document.getElementById('textInput').value = '';
+            document.getElementById('textInput').focus();
+        });
+    </script>
+</body>
+</html>

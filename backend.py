@@ -8,12 +8,14 @@ from google import genai  # Use the new SDK
 import tempfile
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"]}})
 
 # 1. Initialize the new Client
-# It will automatically look for the GEMINI_API_KEY environment variable
-client = genai.Client(api_key="USE YOUR OWN KEY") # TODO - Remember to replace with your own key
-MODEL_ID = "gemini-2.5-flash" # Use a stable ID or 'gemini-2.0-flash'
+api_key = os.environ.get('GEMINI_API_KEY')
+if not api_key:
+    raise ValueError("GEMINI_API_KEY environment variable not set")
+client = genai.Client(api_key=api_key)
+MODEL_ID = "gemini-2.5-flash"
 
 def extract_text_from_pdf(pdf_file):
     try:
@@ -27,8 +29,15 @@ def extract_text_from_pdf(pdf_file):
     except Exception as e:
         return f"Could not read PDF: {str(e)}"
 
-@app.route('/api/evaluate', methods=['POST'])
+@app.route('/api/health', methods=['GET'])
+def health_check():
+    return jsonify({"status": "Backend is running!", "port": 5002})
+
+@app.route('/api/evaluate', methods=['POST', 'OPTIONS'])
 def evaluate_interview():
+    if request.method == 'OPTIONS':
+        return '', 200
+    
     temp_path = None
     try:
         goal = request.form.get('goal', 'General')
@@ -106,4 +115,4 @@ def evaluate_interview():
             os.remove(temp_path)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=False, use_reloader=False, port=5002, host='127.0.0.1')
