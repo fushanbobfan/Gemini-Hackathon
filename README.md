@@ -21,7 +21,7 @@ pip install -r requirements.txt
 export GEMINI_API_KEY="your-api-key-here"
 python backend.py
 ```
-You should see: `Running on http://127.0.0.1:5001`
+You should see: `Running on http://127.0.0.1:5002`
 
 ### 5. Run Frontend (Terminal 2 - open a new terminal)
 ```bash
@@ -54,7 +54,7 @@ Go to: **http://localhost:3000/index.html**
 
 **Port already in use:**
 ```bash
-lsof -ti :5001 | xargs kill -9
+lsof -ti :5002 | xargs kill -9
 lsof -ti :3000 | xargs kill -9
 ```
 
@@ -67,7 +67,7 @@ export GEMINI_API_KEY="your-key"
 
 **Check if backend is running:**
 ```bash
-curl http://localhost:5001/api/health
+curl http://localhost:5002/api/health
 ```
 
 ---
