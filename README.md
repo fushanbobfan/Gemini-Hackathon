@@ -11,21 +11,23 @@ cd Gemini-Hackathon
 ### 2. Get API Key
 Go to https://aistudio.google.com/app/apikey → Create API key (free)
 
-### 3. Run Backend
+### 3. Install Dependencies
 ```bash
-cd Gemini-Hackathon
-conda activate Gemini
+pip install -r requirements.txt
+```
+
+### 4. Run Backend
+```bash
 export GEMINI_API_KEY="your-api-key-here"
 python backend.py
 ```
 
-### 4. Run Frontend (new terminal)
+### 5. Run Frontend (new terminal)
 ```bash
-cd Gemini-Hackathon
 python -m http.server 3000
 ```
 
-### 5. Open Browser
+### 6. Open Browser
 http://localhost:3000
 
 ---
