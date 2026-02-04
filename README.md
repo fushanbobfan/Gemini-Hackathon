@@ -16,19 +16,22 @@ Go to https://aistudio.google.com/app/apikey → Create API key (free)
 pip install -r requirements.txt
 ```
 
-### 4. Run Backend
+### 4. Run Backend (Terminal 1)
 ```bash
 export GEMINI_API_KEY="your-api-key-here"
 python backend.py
 ```
+You should see: `Running on http://127.0.0.1:5001`
 
-### 5. Run Frontend (new terminal)
+### 5. Run Frontend (Terminal 2 - open a new terminal)
 ```bash
+cd Gemini-Hackathon
 python -m http.server 3000
 ```
+You should see: `Serving HTTP on :: port 3000`
 
 ### 6. Open Browser
-http://localhost:3000
+Go to: **http://localhost:3000/index.html**
 
 ---
 
@@ -39,7 +42,6 @@ http://localhost:3000
 
 ## Requirements
 - Python 3.8+
-- Conda environment "Gemini"
 - Google Gemini API key (free)
 
 ## API Endpoints
@@ -53,6 +55,7 @@ http://localhost:3000
 **Port already in use:**
 ```bash
 lsof -ti :5001 | xargs kill -9
+lsof -ti :3000 | xargs kill -9
 ```
 
 **API key not set:**
