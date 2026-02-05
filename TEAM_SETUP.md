@@ -6,7 +6,7 @@ git clone https://github.com/MwMwM-2428/Gemini-Hackathon.git
 cd Gemini-Hackathon
 ```
 
-## Step 2: Install Dependencies
+## Step 2: Install Dependencies (from Gemini-Hackathon directory)
 
 **Python dependencies:**
 ```bash
@@ -25,7 +25,6 @@ Copy the key - you'll need it in the next step.
 
 ## Step 4: Start Backend (Terminal 1)
 ```bash
-cd /Users/alinaliu18/Gemini-Hackathon
 export GEMINI_API_KEY="YOUR-API-KEY-HERE"
 python backend.py
 ```
@@ -35,9 +34,10 @@ python backend.py
  * Running on http://127.0.0.1:5002
 ```
 
+Backend port: **5002**
+
 ## Step 5: Start Frontend (Terminal 2 - open a new terminal)
 ```bash
-cd /Users/alinaliu18/Gemini-Hackathon
 npm run dev
 ```
 
@@ -46,8 +46,10 @@ npm run dev
   ➜  Local:   http://localhost:5173/
 ```
 
+Frontend port: **5173** (auto-increments if busy)
+
 ## Step 6: Open Browser
-Copy the URL from Step 5 (usually `http://localhost:5173`) and open it in your browser.
+Go to the URL from Step 5 (typically `http://localhost:5173`) in your browser.
 
 ## How to Use
 1. **Select interview goal** from the dropdown menu
