@@ -1,53 +1,51 @@
 # AI Interview Prep Tool
 
-## Quick Start
+## Setup & Run
 
-### 1. Clone
+### 1. Clone Repository
 ```bash
 git clone https://github.com/MwMwM-2428/Gemini-Hackathon.git
 cd Gemini-Hackathon
 ```
 
-### 2. Get API Key
-Go to https://aistudio.google.com/app/apikey → Create API key (free)
-
-### 3. Install Dependencies
-
-**Backend dependencies:**
+### 2. Install Dependencies
 ```bash
 pip install -r requirements.txt
-```
-
-**Frontend dependencies (Node.js required):**
-```bash
 npm install
 ```
 
-### 4. Run Backend (Terminal 1)
+### 3. Get Gemini API Key
+Visit: https://aistudio.google.com/app/apikey and create a new API key (free)
+
+### 4. Terminal 1 - Start Backend
 ```bash
 export GEMINI_API_KEY="your-api-key-here"
 python backend.py
 ```
-You should see: `Running on http://127.0.0.1:5002`
+Backend runs on: `http://localhost:5002`
 
-### 5. Run Frontend (Terminal 2 - open a new terminal)
+### 5. Terminal 2 - Start Frontend
 ```bash
 npm run dev
 ```
-You should see: `Local: http://localhost:5173` (or similar)
+Frontend runs on: `http://localhost:5173` (check console output for exact port)
 
-### 6. Open Browser
-Go to: **http://localhost:5173** (or the URL from `npm run dev`)
+### 6. Open in Browser
+Navigate to the URL shown in Terminal 2 (typically http://localhost:5173)
 
 ---
 
-## What It Does
-- Record audio answers to interview questions
-- Upload resume/job description for context
-- Get AI-powered feedback with score and metrics
+## How to Use
+1. Select an interview goal from the dropdown
+2. Record audio or type your response
+3. Optionally upload resume/job description for context
+4. Click "✨ Get Evaluation"
+5. View your score and AI feedback
 
-## Requirements
-- Python 3.8+
+## Tech Stack
+- **Backend**: Python Flask + Google Gemini 2.5 Flash API
+- **Frontend**: React 18 + Vite
+- **Requirements**: Python 3.8+, Node.js 16+
 - Node.js 16+ and npm
 - Google Gemini API key (free)
 
