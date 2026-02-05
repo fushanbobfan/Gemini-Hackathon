@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 
 function App() {
+  const [ageGroup, setAgeGroup] = useState('');
   const [interviewGoal, setInterviewGoal] = useState('');
   const [resumeFile, setResumeFile] = useState(null);
   const [contextText, setContextText] = useState('');
@@ -52,11 +53,20 @@ function App() {
     }
   };
 
+  const handleFileChange = (e) => {
+    setResumeFile(e.target.files[0]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    if (!ageGroup) {
+      setError('Please select your age group');
+      return;
+    }
+    
     if (!interviewGoal) {
-      setError('Please select an interview goal');
+      setError('Please select an interview type');
       return;
     }
     
@@ -71,6 +81,7 @@ function App() {
 
     try {
       const formData = new FormData();
+      formData.append('age_group', ageGroup);
       formData.append('goal', interviewGoal);
       formData.append('sub_type', 'Interview');
       formData.append('text_input', textInput);
@@ -115,40 +126,77 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>AI Interview Prep Tool</h1>
-        <p className="subtitle">Master your interview responses with AI coaching</p>
+        <h1>🎯 Personalized Interview Support For All Ages</h1>
+        <p className="subtitle">
+          Master your interview responses with AI-powered coaching<br/>
+          Customized for everyone — from middle school to the workforce
+        </p>
+        
+        {/* Age Group Badges */}
+        <div className="age-groups">
+          {['📚 Middle School', '🎓 High School', '🏛️ College', '💼 Workforce'].map((badge) => (
+            <div key={badge} className="age-badge">
+              {badge}
+            </div>
+          ))}
+        </div>
       </header>
 
       <main className="app-container">
         <form className="form-container" onSubmit={handleSubmit}>
-          {/* Step 1: Interview Goal */}
+          
+          {/* Step 1: Age Group */}
           <section className="form-section">
             <div className="section-number">1</div>
             <div className="section-content">
-              <h2>Select Interview Goal</h2>
+              <h2>Select Your Age Group</h2>
+              <select 
+                value={ageGroup} 
+                onChange={(e) => setAgeGroup(e.target.value)}
+                className="select-input"
+              >
+                <option value="">Choose your age group...</option>
+                <option value="middle_school">📚 Middle School (11-14 years)</option>
+                <option value="high_school">🎓 High School (14-18 years)</option>
+                <option value="college">🏛️ College/University (18-25 years)</option>
+                <option value="early_career">💼 Early Career (22-30 years)</option>
+                <option value="mid_career">🚀 Mid Career (30-45 years)</option>
+                <option value="senior_career">👔 Senior Professional (45+ years)</option>
+              </select>
+            </div>
+          </section>
+
+          {/* Step 2: Interview Goal */}
+          <section className="form-section">
+            <div className="section-number">2</div>
+            <div className="section-content">
+              <h2>Select Interview Type</h2>
               <select 
                 value={interviewGoal} 
                 onChange={(e) => setInterviewGoal(e.target.value)}
                 className="select-input"
               >
                 <option value="">Choose interview type...</option>
-                <option value="university">University Interview</option>
-                <option value="club">Club/Organization Interview</option>
-                <option value="job_tech">Tech Job Interview</option>
+                <option value="school">🏫 School Interview</option>
+                <option value="club">🤝 Club/Organization Interview</option>
+                <option value="university">🎓 University Admission</option>
+                <option value="job_tech">💻 Tech Job Interview</option>
+                <option value="job_general">💼 General Job Interview</option>
+                <option value="internship">📋 Internship Interview</option>
               </select>
             </div>
           </section>
 
-          {/* Step 2: Upload Context */}
+          {/* Step 3: Upload Context */}
           <section className="form-section">
-            <div className="section-number">2</div>
+            <div className="section-number">3</div>
             <div className="section-content">
               <h2>Upload Context (Optional)</h2>
               <div className="file-input-wrapper">
                 <input 
                   type="file" 
                   accept=".pdf,.doc,.docx"
-                  onChange={(e) => setResumeFile(e.target.files[0])}
+                  onChange={handleFileChange}
                   className="file-input"
                   id="resume-upload"
                 />
@@ -167,9 +215,9 @@ function App() {
             </div>
           </section>
 
-          {/* Step 3: Record or Write Response */}
+          {/* Step 4: Record or Write Response */}
           <section className="form-section">
-            <div className="section-number">3</div>
+            <div className="section-number">4</div>
             <div className="section-content">
               <h2>Provide Your Response</h2>
               
@@ -229,14 +277,14 @@ function App() {
             className="btn btn-submit"
             disabled={loading}
           >
-            {loading ? 'Evaluating...' : '✨ Get Evaluation'}
+            {loading ? '⏳ Evaluating...' : '✨ Get AI Evaluation'}
           </button>
         </form>
 
         {/* Results Section */}
         {evaluation && (
           <section className="results-section">
-            <h2>Your Evaluation Results</h2>
+            <h2>📊 Your Evaluation Results</h2>
             
             <div className="score-card">
               <div className="score-display">
@@ -252,18 +300,18 @@ function App() {
             </div>
 
             <div className="evaluation-text">
-              <h3>Overall Feedback</h3>
+              <h3>Detailed Feedback</h3>
               <p>{evaluation.evaluation}</p>
             </div>
 
             {evaluation.metrics && (
               <div className="metrics-grid">
-                <h3>Detailed Metrics</h3>
+                <h3>Performance Metrics</h3>
                 <div className="metrics-list">
                   {Object.entries(evaluation.metrics).map(([key, value]) => (
                     <div key={key} className="metric-item">
                       <span className="metric-label">
-                        {key.replace(/_/g, ' ').toUpperCase()}
+                        {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                       </span>
                       <span className="metric-value">{value}</span>
                     </div>

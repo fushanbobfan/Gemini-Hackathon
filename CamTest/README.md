@@ -7,3 +7,12 @@ Run the app.py with python app.py
 Then, locally, open the HTML file through a web browser like Microsoft Edge.
 It should hopefully work.
 Remember to place your own API key inside.
+
+
+
+Michelle: 
+When designing front end, macbook users need to turn off AirPlay Receiver settings, can be done in system settings 
+To run backend, python app.py
+To run frontend, open camera.html 
+
+Made the camera and audio to work tgt, but then need permission to record
