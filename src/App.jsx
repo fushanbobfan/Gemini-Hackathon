@@ -262,6 +262,25 @@ function App() {
                 />
               </div>
             </div>
+
+          </section>
+
+          {/* Live Interview Mode Button */}
+          <section className="form-section" style={{ justifyContent: 'center', textAlign: 'center', marginTop: '10px' }}>
+            <div className="section-number" style={{ background: 'var(--morandi-dust-blue)' }}>5</div>
+            <div className="section-content">
+              <h2>Want a More Realistic Experience?</h2>
+              <p style={{ color: 'var(--text-secondary)', marginBottom: '20px', fontSize: '1.05em' }}>
+                Try the live interview mode with real-time video, audio, and transcription
+              </p>
+              <button
+                type="button"
+                className="btn btn-submit"
+                onClick={() => window.location.href = '/camera.html'}
+              >
+                📹 Launch Live Interview Mode
+              </button>
+            </div>
           </section>
 
           {/* Error Display */}
@@ -280,6 +299,7 @@ function App() {
             {loading ? '⏳ Evaluating...' : '✨ Get AI Evaluation'}
           </button>
         </form>
+
 
         {/* Results Section */}
         {evaluation && (

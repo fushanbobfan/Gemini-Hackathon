@@ -37,7 +37,7 @@ Backend running on http://127.0.0.1:5002
 Press Ctrl+C to stop
 ```
 
-### 5️⃣ Access the Frontend
+### 5️⃣ Access the Frontend - The files in src folder are run 
 - Open your browser and go to the **frontend directory** (React/Vue/HTML based on your implementation)
 - Or check `localhost:3000` if using a development server
 - Backend API will be available at `http://localhost:5002/api/evaluate`
