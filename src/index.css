@@ -1,0 +1,42 @@
+/* Morandi Color Palette - Soft, Sophisticated Colors */
+:root {
+  /* Morandi Colors - Soft and sophisticated */
+  --morandi-sage: #9ba89d;        /* Soft sage green */
+  --morandi-mauve: #a89ac7;       /* Dusty mauve purple */
+  --morandi-terracotta: #b39486;  /* Soft terracotta */
+  --morandi-dust-blue: #8b9fb8;   /* Muted dusty blue */
+  --morandi-cream: #f5f3f0;       /* Warm cream */
+  --morandi-warm-gray: #d4cac8;   /* Warm gray */
+  --morandi-brown: #7a6f6a;       /* Soft brown */
+  
+  /* Accent colors */
+  --accent-primary: #9ba89d;
+  --accent-secondary: #a89ac7;
+  --text-primary: #3d3d3d;
+  --text-secondary: #6b6b6b;
+  --bg-primary: #faf8f5;
+  --bg-secondary: #f5f3f0;
+  --border-color: #e8e4e0;
+  --success-color: #9ba89d;
+  --danger-color: #b39486;
+  --warning-color: #d4a574;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+html {
+  scroll-behavior: smooth;
+}
