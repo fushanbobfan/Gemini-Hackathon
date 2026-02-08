@@ -917,7 +917,7 @@
         formData.append('context_text', question);
         formData.append('text_input', fullText);
         formData.append('camera_frame', imageBlob, 'snapshot.jpg');
-        formData.append('audio_recording', audioBlob, 'answer.webm');
+        formData.append('audio_response', audioBlob, 'answer.webm');
         
         log(`📋 Payload: Transcript=${liveTranscript.length}chars, Audio=${audioBlob.size}bytes, Image=${imageBlob.size}bytes`);
 
