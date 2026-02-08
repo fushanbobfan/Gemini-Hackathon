@@ -7,13 +7,25 @@ from flask_cors import CORS
 from google import genai  # Use the new SDK
 import tempfile
 
+# Load .env file if it exists
+from pathlib import Path
+env_path = Path(__file__).parent / '.env'
+if env_path.exists():
+    with open(env_path) as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith('#') and '=' in line:
+                key, val = line.split('=', 1)
+                val = val.strip().strip('"').strip("'")
+                os.environ.setdefault(key.strip(), val)
+
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"]}})
 
 # 1. Initialize the new Client
 api_key = os.environ.get('GEMINI_API_KEY')
 if not api_key:
-    raise ValueError("GEMINI_API_KEY environment variable not set")
+    raise ValueError("GEMINI_API_KEY environment variable not set. Add it to .env file or export it.")
 client = genai.Client(api_key=api_key)
 MODEL_ID = "gemini-2.5-flash"
 

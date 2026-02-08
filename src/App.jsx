@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import './App.css';
 
 function App() {
+  // Page navigation state
+  const [currentStep, setCurrentStep] = useState(0);
+  
   const [ageGroup, setAgeGroup] = useState('');
   const [interviewGoal, setInterviewGoal] = useState('');
   const [resumeFile, setResumeFile] = useState(null);
@@ -125,74 +128,159 @@ function App() {
 
   return (
     <div className="app">
-      <header className="app-header">
-        <h1>🎯 Personalized Interview Support For All Ages</h1>
-        <p className="subtitle">
-          Master your interview responses with AI-powered coaching<br/>
-          Customized for everyone — from middle school to the workforce
-        </p>
-        
-        {/* Age Group Badges */}
-        <div className="age-groups">
-          {['📚 Middle School', '🎓 High School', '🏛️ College', '💼 Workforce'].map((badge) => (
-            <div key={badge} className="age-badge">
-              {badge}
+      {/* ==================== STEP 0: LANDING PAGE - Three Cards ==================== */}
+      {currentStep === 0 && (
+        <>
+          <header className="app-header landing-header">
+            <div className="brand-logo">
+              <span className="logo-icon"></span>
             </div>
-          ))}
-        </div>
-      </header>
-
-      <main className="app-container">
-        <form className="form-container" onSubmit={handleSubmit}>
+            <h1 className="hero-title">
+              <span className="title-accent">Interview</span>
+              <span className="title-main">Maestro</span>
+            </h1>
+            <p className="hero-subtitle">
+              AI-Powered Interview Preparation
+            </p>
+            <p className="hero-tagline">
+              Practice smarter. Perform better. Land your dream opportunity.
+            </p>
+          </header>
           
-          {/* Step 1: Age Group */}
-          <section className="form-section">
-            <div className="section-number">1</div>
-            <div className="section-content">
-              <h2>Select Your Age Group</h2>
-              <select 
-                value={ageGroup} 
-                onChange={(e) => setAgeGroup(e.target.value)}
-                className="select-input"
+          <main className="app-container">
+            <div className="category-cards">
+              <div 
+                className="category-card academic"
+                onClick={() => {
+                  setInterviewGoal('academic');
+                  setCurrentStep(1);
+                }}
               >
-                <option value="">Choose your age group...</option>
-                <option value="middle_school">📚 Middle School (11-14 years)</option>
-                <option value="high_school">🎓 High School (14-18 years)</option>
-                <option value="college">🏛️ College/University (18-25 years)</option>
-                <option value="early_career">💼 Early Career (22-30 years)</option>
-                <option value="mid_career">🚀 Mid Career (30-45 years)</option>
-                <option value="senior_career">👔 Senior Professional (45+ years)</option>
-              </select>
-            </div>
-          </section>
-
-          {/* Step 2: Interview Goal */}
-          <section className="form-section">
-            <div className="section-number">2</div>
-            <div className="section-content">
-              <h2>Select Interview Type</h2>
-              <select 
-                value={interviewGoal} 
-                onChange={(e) => setInterviewGoal(e.target.value)}
-                className="select-input"
+                <div className="card-icon">🎓</div>
+                <h2>Academic</h2>
+                <p>University admissions, scholarships, graduate programs</p>
+                <div className="card-tags">
+                  <span>College Interview</span>
+                  <span>Scholarship</span>
+                  <span>Grad School</span>
+                </div>
+                <button className="card-btn">Start Practice →</button>
+              </div>
+              
+              <div 
+                className="category-card social"
+                onClick={() => {
+                  setInterviewGoal('social');
+                  setCurrentStep(1);
+                }}
               >
-                <option value="">Choose interview type...</option>
-                <option value="school">🏫 School Interview</option>
-                <option value="club">🤝 Club/Organization Interview</option>
-                <option value="university">🎓 University Admission</option>
-                <option value="job_tech">💻 Tech Job Interview</option>
-                <option value="job_general">💼 General Job Interview</option>
-                <option value="internship">📋 Internship Interview</option>
-              </select>
+                <div className="card-icon">🤝</div>
+                <h2>Social</h2>
+                <p>Club leadership, student organizations, volunteer positions</p>
+                <div className="card-tags">
+                  <span>Club Leadership</span>
+                  <span>Student Org</span>
+                  <span>Volunteer</span>
+                </div>
+                <button className="card-btn">Start Practice →</button>
+              </div>
+              
+              <div 
+                className="category-card career"
+                onClick={() => {
+                  setInterviewGoal('career');
+                  setCurrentStep(1);
+                }}
+              >
+                <div className="card-icon">💼</div>
+                <h2>Career</h2>
+                <p>Tech jobs, internships, professional opportunities</p>
+                <div className="card-tags">
+                  <span>Tech Interview</span>
+                  <span>Internship</span>
+                  <span>Job Offer</span>
+                </div>
+                <button className="card-btn">Start Practice →</button>
+              </div>
             </div>
-          </section>
+          </main>
+        </>
+      )}
 
-          {/* Step 3: Upload Context */}
-          <section className="form-section">
-            <div className="section-number">3</div>
-            <div className="section-content">
-              <h2>Upload Context (Optional)</h2>
-              <div className="file-input-wrapper">
+      {/* ==================== STEP 1: SELECT AGE GROUP ==================== */}
+      {currentStep === 1 && (
+        <>
+          <header className="app-header step-header">
+            <div className="step-indicator">
+              <span className="step active">1</span>
+              <span className="step-line"></span>
+              <span className="step">2</span>
+              <span className="step-line"></span>
+              <span className="step">3</span>
+            </div>
+            <h1>Select Your Level</h1>
+            <p className="subtitle">This helps us tailor questions and feedback for you</p>
+          </header>
+          
+          <main className="app-container">
+            <div className="age-cards">
+              {[
+                { value: 'middle_school', icon: '📚', label: 'Middle School', desc: 'Ages 11-14' },
+                { value: 'high_school', icon: '🎓', label: 'High School', desc: 'Ages 14-18' },
+                { value: 'college', icon: '🏛️', label: 'College', desc: 'Ages 18-25' },
+                { value: 'early_career', icon: '💼', label: 'Early Career', desc: 'Ages 22-30' },
+                { value: 'mid_career', icon: '🚀', label: 'Mid Career', desc: 'Ages 30-45' },
+                { value: 'senior_career', icon: '👔', label: 'Senior', desc: 'Ages 45+' },
+              ].map((item) => (
+                <div 
+                  key={item.value}
+                  className={`age-card ${ageGroup === item.value ? 'selected' : ''}`}
+                  onClick={() => setAgeGroup(item.value)}
+                >
+                  <span className="age-icon">{item.icon}</span>
+                  <span className="age-label">{item.label}</span>
+                  <span className="age-desc">{item.desc}</span>
+                </div>
+              ))}
+            </div>
+            
+            <div className="step-buttons">
+              <button 
+                className="btn btn-secondary"
+                onClick={() => setCurrentStep(0)}
+              >
+                ← Back
+              </button>
+              <button 
+                className="btn btn-submit"
+                disabled={!ageGroup}
+                onClick={() => setCurrentStep(2)}
+              >
+                Continue →
+              </button>
+            </div>
+          </main>
+        </>
+      )}
+
+      {/* ==================== STEP 2: UPLOAD CONTEXT ==================== */}
+      {currentStep === 2 && (
+        <>
+          <header className="app-header step-header">
+            <div className="step-indicator">
+              <span className="step completed">✓</span>
+              <span className="step-line completed"></span>
+              <span className="step active">2</span>
+              <span className="step-line"></span>
+              <span className="step">3</span>
+            </div>
+            <h1>Add Context</h1>
+            <p className="subtitle">Upload your resume or add notes to personalize the interview</p>
+          </header>
+          
+          <main className="app-container">
+            <div className="context-section">
+              <div className="upload-area">
                 <input 
                   type="file" 
                   accept=".pdf,.doc,.docx"
@@ -200,156 +288,261 @@ function App() {
                   className="file-input"
                   id="resume-upload"
                 />
-                <label htmlFor="resume-upload" className="file-label">
-                  📄 {resumeFile ? resumeFile.name : 'Choose Resume or Job Description'}
+                <label htmlFor="resume-upload" className="upload-label">
+                  <span className="upload-icon">📄</span>
+                  <span className="upload-text">
+                    {resumeFile ? resumeFile.name : 'Drop your resume or click to upload'}
+                  </span>
+                  <span className="upload-hint">PDF, DOC, DOCX supported</span>
                 </label>
               </div>
               
+              <div className="or-divider">OR</div>
+              
               <textarea 
-                placeholder="Add any additional context, notes, or interview questions..."
+                placeholder="Add any context: job description, interview questions, notes about the position..."
                 value={contextText}
                 onChange={(e) => setContextText(e.target.value)}
-                className="textarea-input"
-                rows="3"
+                className="context-textarea"
+                rows="6"
               />
             </div>
-          </section>
-
-          {/* Step 4: Record or Write Response */}
-          <section className="form-section">
-            <div className="section-number">4</div>
-            <div className="section-content">
-              <h2>Provide Your Response</h2>
-              
-              <div className="audio-section">
-                <h3>Record Audio Response</h3>
-                <div className="button-group">
-                  {!isRecording ? (
-                    <button 
-                      type="button"
-                      onClick={startRecording}
-                      className="btn btn-primary"
-                    >
-                      🎤 Start Recording
-                    </button>
-                  ) : (
-                    <button 
-                      type="button"
-                      onClick={stopRecording}
-                      className="btn btn-danger"
-                    >
-                      ⏹ Stop Recording
-                    </button>
-                  )}
-                  {audioURL && (
-                    <div className="audio-playback">
-                      <audio src={audioURL} controls className="audio-player" />
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="or-divider">OR</div>
-
-              <div className="text-section">
-                <h3>Write Text Response</h3>
-                <textarea 
-                  placeholder="Type your interview response here..."
-                  value={textInput}
-                  onChange={(e) => setTextInput(e.target.value)}
-                  className="textarea-input"
-                  rows="6"
-                />
-              </div>
-            </div>
-
-          </section>
-
-          {/* Live Interview Mode Button */}
-          <section className="form-section" style={{ justifyContent: 'center', textAlign: 'center', marginTop: '10px' }}>
-            <div className="section-number" style={{ background: 'var(--morandi-dust-blue)' }}>5</div>
-            <div className="section-content">
-              <h2>Want a More Realistic Experience?</h2>
-              <p style={{ color: 'var(--text-secondary)', marginBottom: '20px', fontSize: '1.05em' }}>
-                Try the live interview mode with real-time video, audio, and transcription
-              </p>
-              <button
-                type="button"
-                className="btn btn-submit"
-                onClick={() => window.location.href = '/camera.html'}
+            
+            <div className="step-buttons">
+              <button 
+                className="btn btn-secondary"
+                onClick={() => setCurrentStep(1)}
               >
-                📹 Launch Live Interview Mode
+                ← Back
+              </button>
+              <button 
+                className="btn btn-submit"
+                onClick={() => setCurrentStep(3)}
+              >
+                Continue →
               </button>
             </div>
-          </section>
+          </main>
+        </>
+      )}
 
-          {/* Error Display */}
-          {error && (
-            <div className="alert alert-error">
-              ⚠️ {error}
+      {/* ==================== STEP 3: PRACTICE MODE ==================== */}
+      {currentStep === 3 && (
+        <>
+          <header className="app-header step-header">
+            <div className="step-indicator">
+              <span className="step completed">✓</span>
+              <span className="step-line completed"></span>
+              <span className="step completed">✓</span>
+              <span className="step-line completed"></span>
+              <span className="step active">3</span>
             </div>
-          )}
-
-          {/* Submit Button */}
-          <button 
-            type="submit" 
-            className="btn btn-submit"
-            disabled={loading}
-          >
-            {loading ? '⏳ Evaluating...' : '✨ Get AI Evaluation'}
-          </button>
-        </form>
-
-
-        {/* Results Section */}
-        {evaluation && (
-          <section className="results-section">
-            <h2>📊 Your Evaluation Results</h2>
+            <h1>Choose Practice Mode</h1>
+            <p className="subtitle">Select how you'd like to practice</p>
+          </header>
+          
+          <main className="app-container">
+            <div className="mode-cards">
+              <div className="mode-card" onClick={() => setCurrentStep(4)}>
+                <div className="mode-icon">🎤</div>
+                <h3>Quick Practice</h3>
+                <p>Record your answer and get instant AI feedback</p>
+                <ul className="mode-features">
+                  <li>✓ Audio or text response</li>
+                  <li>✓ Instant evaluation</li>
+                  <li>✓ Detailed feedback</li>
+                </ul>
+                <button className="mode-btn">Start Quick Practice</button>
+              </div>
+              
+              <div className="mode-card featured" onClick={() => window.location.href = '/camera.html'}>
+                <div className="featured-badge">Recommended</div>
+                <div className="mode-icon">📹</div>
+                <h3>Live Interview</h3>
+                <p>Full simulation with video, audio, and real-time transcription</p>
+                <ul className="mode-features">
+                  <li>✓ Video recording</li>
+                  <li>✓ Real-time transcription</li>
+                  <li>✓ Body language tips</li>
+                </ul>
+              </div>
+            </div>
             
-            <div className="score-card">
-              <div className="score-display">
-                <span className="score-number">{evaluation.score}</span>
-                <span className="score-max">/100</span>
-              </div>
-              <div className="score-bar">
-                <div 
-                  className="score-fill" 
-                  style={{width: `${evaluation.score}%`}}
-                />
-              </div>
+            <div className="step-buttons">
+              <button 
+                className="btn btn-secondary"
+                onClick={() => setCurrentStep(2)}
+              >
+                ← Back
+              </button>
+              <button 
+                className="btn btn-submit"
+                onClick={() => setCurrentStep(4)}
+              >
+                Quick Practice →
+              </button>
             </div>
+          </main>
+        </>
+      )}
 
-            <div className="evaluation-text">
-              <h3>Detailed Feedback</h3>
-              <p>{evaluation.evaluation}</p>
-            </div>
+      {/* ==================== STEP 4: QUICK PRACTICE (Record/Write) ==================== */}
+      {currentStep === 4 && !evaluation && (
+        <>
+          <header className="app-header step-header">
+            <button className="back-btn" onClick={() => setCurrentStep(3)}>← Back</button>
+            <h1>Quick Practice</h1>
+            <p className="subtitle">Record your answer or type it below</p>
+          </header>
+          
+          <main className="app-container">
+            <form className="practice-form" onSubmit={handleSubmit}>
+              <div className="response-section">
+                <div className="audio-section">
+                  <h3>🎤 Record Your Answer</h3>
+                  <div className="recording-area">
+                    {!isRecording ? (
+                      <button 
+                        type="button"
+                        onClick={startRecording}
+                        className="record-btn"
+                      >
+                        <span className="record-icon">●</span>
+                        Start Recording
+                      </button>
+                    ) : (
+                      <button 
+                        type="button"
+                        onClick={stopRecording}
+                        className="record-btn recording"
+                      >
+                        <span className="stop-icon">■</span>
+                        Stop Recording
+                      </button>
+                    )}
+                    {audioURL && (
+                      <div className="audio-playback">
+                        <audio src={audioURL} controls className="audio-player" />
+                      </div>
+                    )}
+                  </div>
+                </div>
 
-            {evaluation.metrics && (
-              <div className="metrics-grid">
-                <h3>Performance Metrics</h3>
-                <div className="metrics-list">
-                  {Object.entries(evaluation.metrics).map(([key, value]) => (
-                    <div key={key} className="metric-item">
-                      <span className="metric-label">
-                        {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                      </span>
-                      <span className="metric-value">{value}</span>
-                    </div>
-                  ))}
+                <div className="or-divider">OR</div>
+
+                <div className="text-section">
+                  <h3>✍️ Type Your Answer</h3>
+                  <textarea 
+                    placeholder="Type your interview response here..."
+                    value={textInput}
+                    onChange={(e) => setTextInput(e.target.value)}
+                    className="response-textarea"
+                    rows="8"
+                  />
                 </div>
               </div>
-            )}
 
-            <button 
-              type="button"
-              onClick={() => setEvaluation(null)}
-              className="btn btn-secondary"
-            >
-              ← Try Another Response
-            </button>
-          </section>
-        )}
-      </main>
+              {error && (
+                <div className="alert alert-error">
+                  ⚠️ {error}
+                </div>
+              )}
+
+              <button 
+                type="submit" 
+                className="btn btn-submit"
+                disabled={loading || (!textInput && !audioBlob)}
+              >
+                {loading ? '⏳ Analyzing...' : '✨ Get AI Feedback'}
+              </button>
+            </form>
+          </main>
+        </>
+      )}
+
+      {/* ==================== STEP 5: RESULTS ==================== */}
+      {evaluation && (
+        <>
+          <header className="app-header step-header">
+            <h1>📊 Your Results</h1>
+            <p className="subtitle">Here's your personalized feedback</p>
+          </header>
+          
+          <main className="app-container">
+            <section className="results-section">
+              <div className="score-card">
+                <div className="score-display">
+                  <span className="score-number">{evaluation.score}</span>
+                  <span className="score-max">/100</span>
+                </div>
+                <div className="score-bar">
+                  <div 
+                    className="score-fill" 
+                    style={{width: `${evaluation.score}%`}}
+                  />
+                </div>
+              </div>
+
+              <div className="evaluation-text">
+                <h3>Detailed Feedback</h3>
+                <p>{evaluation.evaluation}</p>
+              </div>
+
+              {evaluation.metrics && (
+                <div className="metrics-grid">
+                  <h3>Performance Metrics</h3>
+                  <div className="metrics-list">
+                    {Object.entries(evaluation.metrics).map(([key, value]) => (
+                      <div key={key} className="metric-item">
+                        <span className="metric-label">
+                          {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                        </span>
+                        <span className="metric-value">{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="result-actions">
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setEvaluation(null);
+                    setTextInput('');
+                    setAudioBlob(null);
+                    setAudioURL(null);
+                    setCurrentStep(4);
+                  }}
+                  className="btn btn-secondary"
+                >
+                  🔄 Try Again
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setEvaluation(null);
+                    window.location.href = '/camera.html';
+                  }}
+                  className="btn btn-live"
+                >
+                  🎥 Try Live Interview
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setEvaluation(null);
+                    setCurrentStep(0);
+                  }}
+                  className="btn btn-secondary"
+                >
+                  🏠 Back to Home
+                </button>
+              </div>
+            </section>
+          </main>
+        </>
+      )}
     </div>
   );
 }
