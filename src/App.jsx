@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
 function App() {
@@ -20,7 +20,30 @@ function App() {
   const [error, setError] = useState(null);
 
   const mediaRecorderRef = React.useRef(null);
+  const cardsRef = useRef(null);
   const API_BASE_URL = 'http://localhost:5002';
+
+  // Scroll animation for cards section
+  useEffect(() => {
+    if (currentStep !== 0) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    
+    const timer = setTimeout(() => {
+      const elements = document.querySelectorAll('.scroll-reveal');
+      elements.forEach(el => observer.observe(el));
+    }, 100);
+    
+    return () => { clearTimeout(timer); observer.disconnect(); };
+  }, [currentStep]);
 
   const startRecording = async () => {
     try {
@@ -128,29 +151,45 @@ function App() {
 
   return (
     <div className="app">
-      {/* ==================== STEP 0: LANDING PAGE - Three Cards ==================== */}
+      {/* ==================== STEP 0: LANDING PAGE ==================== */}
       {currentStep === 0 && (
         <>
-          <header className="app-header landing-header">
-            <div className="brand-logo">
-              <span className="logo-icon"></span>
+          <section className="hero-fullscreen">
+            <div className="hero-bg-orbs">
+              <div className="orb orb-1"></div>
+              <div className="orb orb-2"></div>
+              <div className="orb orb-3"></div>
             </div>
-            <h1 className="hero-title">
-              <span className="title-accent">Interview</span>
-              <span className="title-main">Maestro</span>
-            </h1>
-            <p className="hero-subtitle">
-              AI-Powered Interview Preparation
-            </p>
-            <p className="hero-tagline">
-              Practice smarter. Perform better. Land your dream opportunity.
-            </p>
-          </header>
+            <div className="shooting-star"></div>
+            <div className="shooting-star star-2"></div>
+            <div className="sparkles">
+              <div className="sparkle s1">✦</div>
+              <div className="sparkle s2">✧</div>
+              <div className="sparkle s3">✦</div>
+              <div className="sparkle s4">✧</div>
+              <div className="sparkle s5">✦</div>
+              <div className="sparkle s6">✧</div>
+            </div>
+            <div className="hero-content">
+              <div className="brand-logo">
+                <span className="logo-icon"></span>
+              </div>
+              <h1 className="hero-title-big">
+                <span className="title-line title-line-1">Interview</span>
+                <span className="title-line title-line-2">Maestro</span>
+              </h1>
+              <p className="hero-desc hero-desc-1">AI-Powered Interview Preparation</p>
+              <p className="hero-desc hero-desc-2">Practice smarter. Perform better. Land your dream opportunity.</p>
+              <div className="hero-scroll-arrow">↓</div>
+            </div>
+          </section>
           
-          <main className="app-container">
+          <main className="app-container cards-section" ref={cardsRef}>
+            <h2 className="section-title scroll-reveal">Choose Your Path</h2>
+            <p className="section-subtitle scroll-reveal">Select the interview category that fits your goal</p>
             <div className="category-cards">
               <div 
-                className="category-card academic"
+                className="category-card academic scroll-reveal reveal-delay-1"
                 onClick={() => {
                   setInterviewGoal('academic');
                   setCurrentStep(1);
@@ -168,7 +207,7 @@ function App() {
               </div>
               
               <div 
-                className="category-card social"
+                className="category-card social scroll-reveal reveal-delay-2"
                 onClick={() => {
                   setInterviewGoal('social');
                   setCurrentStep(1);
@@ -186,7 +225,7 @@ function App() {
               </div>
               
               <div 
-                className="category-card career"
+                className="category-card career scroll-reveal reveal-delay-3"
                 onClick={() => {
                   setInterviewGoal('career');
                   setCurrentStep(1);
