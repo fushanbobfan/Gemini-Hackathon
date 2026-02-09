@@ -1347,3 +1347,105 @@ body {
 .reveal-delay-1 { transition-delay: 0.2s; }
 .reveal-delay-2 { transition-delay: 0.8s; }
 .reveal-delay-3 { transition-delay: 1.4s; }
+
+/* ==================== EXTRA AURA LAYERS ==================== */
+.hero-fullscreen::after {
+  content: '';
+  position: absolute;
+  inset: 8% 10% auto;
+  height: 55%;
+  border-radius: 40px;
+  background: radial-gradient(circle at top, rgba(232, 168, 124, 0.14), transparent 60%),
+    radial-gradient(circle at 70% 30%, rgba(197, 180, 212, 0.18), transparent 55%),
+    radial-gradient(circle at 30% 70%, rgba(139, 158, 179, 0.12), transparent 60%);
+  opacity: 0.8;
+  pointer-events: none;
+  filter: blur(18px);
+}
+
+.hero-title-big {
+  text-shadow: 0 4px 12px rgba(45, 52, 54, 0.08),
+    0 2px 6px rgba(232, 168, 124, 0.12);
+  filter: drop-shadow(0 2px 8px rgba(197, 180, 212, 0.15));
+}
+
+.category-card,
+.age-card,
+.mode-card,
+.response-section,
+.results-section {
+  position: relative;
+}
+
+.category-card::after,
+.age-card::after,
+.mode-card::after,
+.response-section::after,
+.results-section::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}
+
+.category-card:hover,
+.age-card:hover,
+.mode-card:hover {
+  box-shadow: 0 26px 56px rgba(45, 52, 54, 0.14),
+    0 6px 18px rgba(45, 52, 54, 0.08);
+}
+
+.card-tags span,
+.featured-badge {
+  backdrop-filter: blur(8px);
+}
+
+.btn-submit,
+.btn-live,
+.record-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-submit::after,
+.btn-live::after,
+.record-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 10%, rgba(255, 255, 255, 0.35), transparent 60%);
+  transform: translateX(-120%);
+  transition: transform 0.6s ease;
+}
+
+.btn-submit:hover::after,
+.btn-live:hover::after,
+.record-btn:hover::after {
+  transform: translateX(120%);
+}
+
+.hero-scroll-arrow {
+  filter: drop-shadow(0 6px 12px rgba(232, 168, 124, 0.25));
+}
+
+.audio-player {
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px rgba(139, 158, 179, 0.18);
+}
+
+.context-textarea,
+.response-textarea {
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(248, 246, 242, 0.85));
+}
+
+.evaluation-text,
+.metric-item,
+.score-card {
+  box-shadow: 0 12px 26px rgba(45, 52, 54, 0.08);
+}
+
+.sparkle {
+  text-shadow: 0 0 10px rgba(232, 168, 124, 0.45);
+}
