@@ -176,7 +176,7 @@ function App() {
               </div>
               <h1 className="hero-title-big">
                 <span className="title-line title-line-1">Interview</span>
-                <span className="title-line title-line-2">Maestro</span>
+                <span className="title-line title-line-2">Interview Maestro</span>
               </h1>
               <p className="hero-desc hero-desc-1">AI-Powered Interview Preparation</p>
               <p className="hero-desc hero-desc-2">Practice smarter. Perform better. Land your dream opportunity.</p>
