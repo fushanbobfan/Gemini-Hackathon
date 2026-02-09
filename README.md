@@ -78,9 +78,19 @@ Open **http://localhost:5173** in your browser to begin!
 
 This repo is configured to deploy automatically to GitHub Pages when changes are pushed to the `work` branch. After the workflow completes, the live site will be available at:
 
-**https://mwmwm-2428.github.io/Gemini-Hackathon/**
+**https://fushanbobfan.github.io/Gemini-Hackathon/**
 
 If you fork the repo, update the `base` path in `vite.config.js` and use the corresponding GitHub Pages URL for your account.
+
+### ✅ One-time setup on GitHub
+1. Push this branch (`work`) to GitHub.
+2. In the GitHub repo, go to **Settings → Pages**.
+3. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+
+### 🚀 Deploy (every time you want a new build)
+1. Commit and push changes to the `work` branch.
+2. Wait for **Actions → Deploy to GitHub Pages** to finish.
+3. Open the live URL: **https://fushanbobfan.github.io/Gemini-Hackathon/**
 
 ---
 
