@@ -26,6 +26,7 @@ Follow these steps to set up the project locally.
 npm install
 ```
 
+
 **Backend Setup**
 You can use either Conda or Pip.
 
