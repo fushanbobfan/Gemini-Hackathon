@@ -431,7 +431,7 @@ function App() {
                       ? resumeText
                         ? `Compressed: ${(resumeText.length / 1024).toFixed(1)}KB (was ${(resumeFile.size / 1024).toFixed(1)}KB)`
                         : `${(resumeFile.size / 1024).toFixed(1)}KB (extraction failed, using full file)`
-                      : 'PDF files supported (auto-compressed)'}
+                      : 'PDF supported, max ~4MB (auto-compressed)'}
                   </span>
                 </label>
               </div>
