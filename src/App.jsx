@@ -422,15 +422,15 @@ function App() {
                   id="resume-upload"
                 />
                 <label htmlFor="resume-upload" className="upload-label">
-                  <span className="upload-icon">{resumeText ? '✅' : resumeFile ? '📄' : '📄'}</span>
+                  <span className="upload-icon">📄</span>
                   <span className="upload-text">
                     {resumeFile ? resumeFile.name : 'Drop your resume or click to upload'}
                   </span>
                   <span className="upload-hint">
                     {resumeFile
                       ? resumeText
-                        ? `✅ Compressed: ${(resumeText.length / 1024).toFixed(1)}KB (was ${(resumeFile.size / 1024).toFixed(1)}KB)`
-                        : `⚠️ ${(resumeFile.size / 1024).toFixed(1)}KB (extraction failed, using full file)`
+                        ? `Compressed: ${(resumeText.length / 1024).toFixed(1)}KB (was ${(resumeFile.size / 1024).toFixed(1)}KB)`
+                        : `${(resumeFile.size / 1024).toFixed(1)}KB (extraction failed, using full file)`
                       : 'PDF files supported (auto-compressed)'}
                   </span>
                 </label>
