@@ -101,12 +101,17 @@ function App() {
 
   const extractTextFromPDF = async (file) => {
     try {
+      console.log('📥 Reading file as ArrayBuffer...');
       const arrayBuffer = await file.arrayBuffer();
+
+      console.log('📚 Loading PDF document...');
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+      console.log(`📖 PDF loaded! Pages: ${pdf.numPages}`);
       let fullText = '';
 
-      console.log(`📖 PDF has ${pdf.numPages} pages`);
       for (let i = 1; i <= pdf.numPages; i++) {
+        console.log(`📄 Extracting page ${i}/${pdf.numPages}...`);
         const page = await pdf.getPage(i);
         const textContent = await page.getTextContent();
         const pageText = textContent.items.map(item => item.str).join(' ');
@@ -115,38 +120,45 @@ function App() {
 
       const extractedText = fullText.trim();
       if (!extractedText) {
-        throw new Error('PDF appears to be empty or contains only images');
+        throw new Error('PDF is empty or contains only images');
       }
 
+      console.log(`✅ Extraction complete! ${extractedText.length} characters`);
       return extractedText;
     } catch (err) {
-      console.error('PDF extraction error:', err);
-      throw new Error(`PDF extraction failed: ${err.message}`);
+      console.error('❌ PDF extraction error:', err);
+      throw new Error(err.message || 'Unknown PDF error');
     }
   };
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setResumeFile(file);
-      setError(null);
+    if (!file) return;
 
-      // Extract text from PDF to send instead of the full file
-      if (file.type === 'application/pdf') {
-        try {
-          console.log(`📄 Extracting text from PDF: ${file.name} (${(file.size / 1024).toFixed(1)}KB)`);
-          const text = await extractTextFromPDF(file);
-          setResumeText(text);
-          console.log(`✅ Extracted ${text.length} characters from PDF (${(file.size / 1024).toFixed(1)}KB → ${(text.length / 1024).toFixed(1)}KB)`);
-        } catch (err) {
-          console.error('PDF extraction failed:', err);
-          setError(`PDF extraction error: ${err.message}. File will be skipped.`);
-          setResumeFile(null);
-          setResumeText('');
-        }
-      } else {
-        console.log(`📎 Non-PDF file: ${file.name} - will be skipped (only PDFs supported)`);
-      }
+    console.log(`📎 File selected: ${file.name}, type: ${file.type}, size: ${(file.size / 1024).toFixed(1)}KB`);
+
+    setResumeFile(file);
+    setError(null);
+    setResumeText('');
+
+    // Only accept PDFs
+    if (file.type !== 'application/pdf') {
+      setError('Only PDF files are supported');
+      setResumeFile(null);
+      return;
+    }
+
+    // Extract text from PDF
+    try {
+      console.log(`📄 Starting PDF text extraction...`);
+      const text = await extractTextFromPDF(file);
+      setResumeText(text);
+      console.log(`✅ SUCCESS! Extracted ${text.length} chars (${(file.size / 1024).toFixed(1)}KB → ${(text.length / 1024).toFixed(1)}KB)`);
+    } catch (err) {
+      console.error('❌ PDF extraction FAILED:', err);
+      setError(`PDF error: ${err.message}`);
+      setResumeFile(null);
+      setResumeText('');
     }
   };
 
@@ -402,9 +414,9 @@ function App() {
           <main className="app-container">
             <div className="context-section">
               <div className="upload-area">
-                <input 
-                  type="file" 
-                  accept=".pdf,.doc,.docx"
+                <input
+                  type="file"
+                  accept=".pdf"
                   onChange={handleFileChange}
                   className="file-input"
                   id="resume-upload"
@@ -418,8 +430,8 @@ function App() {
                   </span>
                   <span className="upload-hint">
                     {resumeText
-                      ? `Extracted ${(resumeText.length / 1024).toFixed(1)}KB text`
-                      : 'PDF supported (text will be extracted)'}
+                      ? `✅ ${(resumeText.length / 1024).toFixed(1)}KB text ready`
+                      : 'Only PDF files (text will be auto-extracted)'}
                   </span>
                 </label>
               </div>
