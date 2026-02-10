@@ -68,8 +68,8 @@ export default async function handler(req, res) {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    // Use Gemini 1.5 Flash (free tier - 2.0 requires paid plan)
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    // Use Gemini 1.5 Pro (free tier - more capable than Flash)
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
 
     // Parse form data
     const form = formidable({
