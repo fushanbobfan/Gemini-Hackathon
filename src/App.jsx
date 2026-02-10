@@ -48,7 +48,19 @@ function App() {
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorderRef.current = new MediaRecorder(stream);
+
+      // Use WebM with Opus codec for better compression (much smaller than WAV)
+      const options = {
+        mimeType: 'audio/webm;codecs=opus',
+        audioBitsPerSecond: 32000 // 32kbps - good quality, small size
+      };
+
+      // Fallback if webm not supported
+      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+        options.mimeType = 'audio/webm';
+      }
+
+      mediaRecorderRef.current = new MediaRecorder(stream, options);
       const audioChunks = [];
 
       mediaRecorderRef.current.ondataavailable = (event) => {
@@ -58,7 +70,7 @@ function App() {
       };
 
       mediaRecorderRef.current.onstop = () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        const audioBlob = new Blob(audioChunks, { type: mediaRecorderRef.current.mimeType });
         setAudioBlob(audioBlob);
         setAudioURL(URL.createObjectURL(audioBlob));
       };
