@@ -54,16 +54,14 @@ function App() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-      // Use WebM with Opus codec for aggressive compression
-      const options = {
-        mimeType: 'audio/webm;codecs=opus',
-        audioBitsPerSecond: 16000 // 16kbps - very small size, acceptable quality for speech
-      };
-
-      // Fallback if webm not supported
-      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-        options.mimeType = 'audio/webm';
+      // Pick best supported audio format (WebM for Chrome/Firefox, MP4 for iOS Safari)
+      const options = { audioBitsPerSecond: 16000 };
+      const formats = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/aac'];
+      const supported = formats.find(f => MediaRecorder.isTypeSupported(f));
+      if (supported) {
+        options.mimeType = supported;
       }
+      console.log(`Recording format: ${options.mimeType || 'browser default'}`);
 
       mediaRecorderRef.current = new MediaRecorder(stream, options);
       const audioChunks = [];

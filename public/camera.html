@@ -815,13 +815,15 @@
         isRecording = true;
         recordingStartTime = Date.now();
         
-        let mimeType = 'audio/webm;codecs=opus';
-        if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'audio/webm';
-        log(`🎙️ Using format: ${mimeType}`);
+        const formats = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/aac'];
+        let mimeType = formats.find(f => MediaRecorder.isTypeSupported(f)) || '';
+        log(`🎙️ Using format: ${mimeType || 'browser default'}`);
         
         try {
             const audioOnlyStream = new MediaStream([audioTracks[0]]);
-            mediaRecorder = new MediaRecorder(audioOnlyStream, { mimeType, audioBitsPerSecond: 16000 });
+            const recOptions = { audioBitsPerSecond: 16000 };
+            if (mimeType) recOptions.mimeType = mimeType;
+            mediaRecorder = new MediaRecorder(audioOnlyStream, recOptions);
             log(`✅ MediaRecorder created (state: ${mediaRecorder.state})`);
             
             mediaRecorder.ondataavailable = (event) => {
@@ -834,7 +836,7 @@
             mediaRecorder.onstop = () => {
                 log("⏹️ Recording complete");
                 isRecording = false;
-                const audioBlob = new Blob(audioChunks, { type: mimeType });
+                const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || mimeType });
                 log(`🎵 Total: ${audioBlob.size} bytes (${audioChunks.length} chunks)`);
                 
                 if (audioBlob.size === 0) {
