@@ -1,13 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
+import * as pdfjsLib from 'pdfjs-dist';
+
+// Configure PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 function App() {
   // Page navigation state
   const [currentStep, setCurrentStep] = useState(0);
-  
+
   const [ageGroup, setAgeGroup] = useState('');
   const [interviewGoal, setInterviewGoal] = useState('');
   const [resumeFile, setResumeFile] = useState(null);
+  const [resumeText, setResumeText] = useState(''); // Extracted text from PDF
   const [contextText, setContextText] = useState('');
   const [textInput, setTextInput] = useState('');
   
@@ -49,10 +54,10 @@ function App() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-      // Use WebM with Opus codec for better compression (much smaller than WAV)
+      // Use WebM with Opus codec for aggressive compression
       const options = {
         mimeType: 'audio/webm;codecs=opus',
-        audioBitsPerSecond: 32000 // 32kbps - good quality, small size
+        audioBitsPerSecond: 16000 // 16kbps - very small size, acceptable quality for speech
       };
 
       // Fallback if webm not supported
@@ -94,27 +99,59 @@ function App() {
     }
   };
 
-  const handleFileChange = (e) => {
+  const extractTextFromPDF = async (file) => {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let fullText = '';
+
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items.map(item => item.str).join(' ');
+        fullText += pageText + '\n';
+      }
+
+      return fullText.trim();
+    } catch (err) {
+      console.error('PDF extraction error:', err);
+      throw new Error('Could not extract text from PDF');
+    }
+  };
+
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
       setResumeFile(file);
       setError(null);
+
+      // Extract text from PDF to send instead of the full file
+      if (file.type === 'application/pdf') {
+        try {
+          const text = await extractTextFromPDF(file);
+          setResumeText(text);
+          console.log(`Extracted ${text.length} characters from PDF (vs ${file.size} bytes file)`);
+        } catch (err) {
+          setError('Could not read PDF file. Please try another format.');
+          setResumeFile(null);
+        }
+      }
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!ageGroup) {
       setError('Please select your age group');
       return;
     }
-    
+
     if (!interviewGoal) {
       setError('Please select an interview type');
       return;
     }
-    
+
     if (!textInput && !audioBlob) {
       setError('Please provide either text or audio response');
       return;
@@ -130,14 +167,29 @@ function App() {
       formData.append('goal', interviewGoal);
       formData.append('sub_type', 'Interview');
       formData.append('text_input', textInput);
-      formData.append('context_text', contextText);
 
-      if (resumeFile) {
-        formData.append('file', resumeFile);
-      }
+      // Send extracted PDF text + context instead of the full PDF file
+      const combinedContext = resumeText
+        ? `RESUME:\n${resumeText}\n\nADDITIONAL NOTES:\n${contextText}`
+        : contextText;
+      formData.append('context_text', combinedContext);
 
       if (audioBlob) {
         formData.append('audio_response', audioBlob, 'audio.webm');
+      }
+
+      // Estimate payload size (for debugging)
+      let estimatedSize = 0;
+      estimatedSize += new Blob([textInput]).size;
+      estimatedSize += new Blob([combinedContext]).size;
+      if (audioBlob) estimatedSize += audioBlob.size;
+      const sizeMB = estimatedSize / (1024 * 1024);
+      console.log(`Estimated payload: ${sizeMB.toFixed(2)}MB`);
+
+      if (sizeMB > 4) {
+        setError(`Payload too large (${sizeMB.toFixed(1)}MB). Try shorter recording or less text.`);
+        setLoading(false);
+        return;
       }
 
       const response = await fetch(`${API_BASE_URL}/api/evaluate`, {

@@ -69,7 +69,7 @@ export default async function handler(req, res) {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     // Use Gemini 1.5 Pro (free tier - more capable than Flash)
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro-latest' });
 
     // Parse form data
     const form = formidable({
@@ -87,28 +87,12 @@ export default async function handler(req, res) {
     const goal = fields.goal?.[0] || 'General';
     const subType = fields.sub_type?.[0] || 'Interview';
     const userResponse = fields.text_input?.[0] || '';
-    const contextText = fields.context_text?.[0] || '';
+    const contextText = fields.context_text?.[0] || 'No context provided.';
 
-    // Handle PDF resume if provided
-    let resumeContent = 'No resume provided.';
-    const uploadedFile = files.file?.[0];
-    if (uploadedFile) {
-      try {
-        const pdfBuffer = await readFile(uploadedFile.filepath);
-        // Note: PDF parsing in Node.js would require additional library
-        // For now, we'll note it's provided but not parse it
-        resumeContent = 'Resume file provided (parsing not implemented in demo)';
-        await unlink(uploadedFile.filepath);
-      } catch (err) {
-        console.error('PDF read error:', err);
-      }
-    }
-
-    // Build prompt
+    // Build prompt (contextText now contains extracted PDF text + notes from client)
     const prompt = `
 You are an expert interview coach for ${goal} (${subType}).
-RESUME: ${resumeContent}
-CONTEXT/NOTES: ${contextText}
+CONTEXT: ${contextText}
 USER RESPONSE: "${userResponse}"
 
 TASK:

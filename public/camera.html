@@ -821,7 +821,7 @@
         
         try {
             const audioOnlyStream = new MediaStream([audioTracks[0]]);
-            mediaRecorder = new MediaRecorder(audioOnlyStream, { mimeType, audioBitsPerSecond: 128000 });
+            mediaRecorder = new MediaRecorder(audioOnlyStream, { mimeType, audioBitsPerSecond: 16000 });
             log(`✅ MediaRecorder created (state: ${mediaRecorder.state})`);
             
             mediaRecorder.ondataavailable = (event) => {
