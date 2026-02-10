@@ -924,7 +924,8 @@
         log(`📋 Payload: Transcript=${liveTranscript.length}chars, Audio=${audioBlob.size}bytes, Image=${imageBlob.size}bytes`);
 
         try {
-            const response = await fetch('http://localhost:5002/api/evaluate', { method: 'POST', body: formData });
+            const apiUrl = window.location.hostname === 'localhost' ? 'http://localhost:5002/api/evaluate' : '/api/evaluate';
+            const response = await fetch(apiUrl, { method: 'POST', body: formData });
             if (!response.ok) throw new Error(`Server error ${response.status}`);
             
             const data = await response.json();
@@ -958,7 +959,7 @@
             resultsDiv.style.display = 'block';
         } catch (err) {
             log(`❌ Backend error: ${err.message}`);
-            alert(`Error: ${err.message}\n\nMake sure Flask server is running on port 5002.`);
+            alert(`Error: ${err.message}`);
         } finally {
             loader.style.display = 'none';
         }
