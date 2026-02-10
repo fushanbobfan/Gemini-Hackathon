@@ -68,9 +68,8 @@ export default async function handler(req, res) {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    // Use Gemini 1.5 Pro (free tier - more capable than Flash)
-    // Note: @google/generative-ai SDK does NOT support -latest suffix
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+    // Use Gemini 1.5 Flash (confirmed working on free tier)
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
     // Parse form data
     const form = formidable({
