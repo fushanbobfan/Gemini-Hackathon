@@ -105,6 +105,7 @@ function App() {
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       let fullText = '';
 
+      console.log(`📖 PDF has ${pdf.numPages} pages`);
       for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
         const textContent = await page.getTextContent();
@@ -112,10 +113,15 @@ function App() {
         fullText += pageText + '\n';
       }
 
-      return fullText.trim();
+      const extractedText = fullText.trim();
+      if (!extractedText) {
+        throw new Error('PDF appears to be empty or contains only images');
+      }
+
+      return extractedText;
     } catch (err) {
       console.error('PDF extraction error:', err);
-      throw new Error('Could not extract text from PDF');
+      throw new Error(`PDF extraction failed: ${err.message}`);
     }
   };
 
@@ -128,13 +134,18 @@ function App() {
       // Extract text from PDF to send instead of the full file
       if (file.type === 'application/pdf') {
         try {
+          console.log(`📄 Extracting text from PDF: ${file.name} (${(file.size / 1024).toFixed(1)}KB)`);
           const text = await extractTextFromPDF(file);
           setResumeText(text);
-          console.log(`Extracted ${text.length} characters from PDF (vs ${file.size} bytes file)`);
+          console.log(`✅ Extracted ${text.length} characters from PDF (${(file.size / 1024).toFixed(1)}KB → ${(text.length / 1024).toFixed(1)}KB)`);
         } catch (err) {
-          setError('Could not read PDF file. Please try another format.');
+          console.error('PDF extraction failed:', err);
+          setError(`PDF extraction error: ${err.message}. File will be skipped.`);
           setResumeFile(null);
+          setResumeText('');
         }
+      } else {
+        console.log(`📎 Non-PDF file: ${file.name} - will be skipped (only PDFs supported)`);
       }
     }
   };
@@ -399,11 +410,17 @@ function App() {
                   id="resume-upload"
                 />
                 <label htmlFor="resume-upload" className="upload-label">
-                  <span className="upload-icon">📄</span>
+                  <span className="upload-icon">{resumeText ? '✅' : '📄'}</span>
                   <span className="upload-text">
-                    {resumeFile ? resumeFile.name : 'Drop your resume or click to upload'}
+                    {resumeFile
+                      ? `${resumeFile.name}${resumeText ? ' - Text extracted!' : ''}`
+                      : 'Drop your resume or click to upload'}
                   </span>
-                  <span className="upload-hint">PDF, DOC, DOCX supported</span>
+                  <span className="upload-hint">
+                    {resumeText
+                      ? `Extracted ${(resumeText.length / 1024).toFixed(1)}KB text`
+                      : 'PDF supported (text will be extracted)'}
+                  </span>
                 </label>
               </div>
               
