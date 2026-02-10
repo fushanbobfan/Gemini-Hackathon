@@ -71,29 +71,16 @@ function App() {
 
       mediaRecorderRef.current.onstop = () => {
         const audioBlob = new Blob(audioChunks, { type: mediaRecorderRef.current.mimeType });
-
-        // Check file size (4MB limit to stay under Vercel's 4.5MB)
-        const sizeMB = audioBlob.size / (1024 * 1024);
-        if (sizeMB > 4) {
-          setError(`Recording too large (${sizeMB.toFixed(1)}MB). Please keep recordings under 2 minutes.`);
-          return;
-        }
-
         setAudioBlob(audioBlob);
         setAudioURL(URL.createObjectURL(audioBlob));
+
+        const sizeMB = audioBlob.size / (1024 * 1024);
         console.log(`Audio recorded: ${sizeMB.toFixed(2)}MB`);
       };
 
       mediaRecorderRef.current.start();
       setIsRecording(true);
       setError(null);
-
-      // Auto-stop after 2 minutes to prevent huge files
-      setTimeout(() => {
-        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-          stopRecording();
-        }
-      }, 120000); // 2 minutes
     } catch (err) {
       console.error('Error accessing microphone:', err);
       setError('Could not access microphone. Please check permissions.');
@@ -110,13 +97,6 @@ function App() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Check PDF size (3MB limit to leave room for audio)
-      const sizeMB = file.size / (1024 * 1024);
-      if (sizeMB > 3) {
-        setError(`PDF too large (${sizeMB.toFixed(1)}MB). Please use a PDF under 3MB.`);
-        e.target.value = ''; // Clear the input
-        return;
-      }
       setResumeFile(file);
       setError(null);
     }
@@ -157,11 +137,6 @@ function App() {
       }
 
       if (audioBlob) {
-        // Final size check before upload
-        const sizeMB = audioBlob.size / (1024 * 1024);
-        if (sizeMB > 4) {
-          throw new Error(`Audio file too large (${sizeMB.toFixed(1)}MB). Please record a shorter response.`);
-        }
         formData.append('audio_response', audioBlob, 'audio.webm');
       }
 
