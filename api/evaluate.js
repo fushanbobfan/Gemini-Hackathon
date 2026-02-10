@@ -88,12 +88,26 @@ export default async function handler(req, res) {
     const goal = fields.goal?.[0] || 'General';
     const subType = fields.sub_type?.[0] || 'Interview';
     const userResponse = fields.text_input?.[0] || '';
-    const contextText = fields.context_text?.[0] || 'No context provided.';
+    const contextText = fields.context_text?.[0] || '';
 
-    // Build prompt (contextText now contains extracted PDF text + notes from client)
+    // Handle PDF resume if provided (just note it's provided, don't parse)
+    let resumeContext = '';
+    const uploadedFile = files.file?.[0];
+    if (uploadedFile) {
+      resumeContext = `Resume file provided: ${uploadedFile.originalFilename}`;
+      // Clean up the file
+      try {
+        await unlink(uploadedFile.filepath);
+      } catch (err) {
+        console.error('File cleanup error:', err);
+      }
+    }
+
+    // Build prompt
+    const fullContext = [resumeContext, contextText].filter(Boolean).join('\n\n');
     const prompt = `
 You are an expert interview coach for ${goal} (${subType}).
-CONTEXT: ${contextText}
+CONTEXT: ${fullContext || 'No context provided.'}
 USER RESPONSE: "${userResponse}"
 
 TASK:
