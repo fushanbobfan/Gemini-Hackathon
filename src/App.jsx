@@ -131,13 +131,28 @@ function App() {
     }
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    console.log(`✅ File selected: ${file.name}, size: ${(file.size / 1024).toFixed(1)}KB`);
+    console.log(`📎 File selected: ${file.name}, size: ${(file.size / 1024).toFixed(1)}KB`);
     setResumeFile(file);
     setError(null);
+    setResumeText('');
+
+    // Try to extract text from PDF to reduce payload size
+    if (file.type === 'application/pdf') {
+      try {
+        console.log(`📄 Extracting text from PDF...`);
+        const text = await extractTextFromPDF(file);
+        setResumeText(text);
+        console.log(`✅ Extracted ${text.length} chars (${(file.size / 1024).toFixed(1)}KB → ${(text.length / 1024).toFixed(1)}KB)`);
+      } catch (err) {
+        console.warn('⚠️ PDF extraction failed, will upload full file:', err.message);
+        // Don't block upload if extraction fails, just warn
+        setResumeText('');
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -169,11 +184,14 @@ function App() {
       formData.append('sub_type', 'Interview');
       formData.append('text_input', textInput);
 
-      // Send context text
-      formData.append('context_text', contextText);
+      // Send extracted PDF text + context (or full file if extraction failed)
+      const combinedContext = resumeText
+        ? `RESUME:\n${resumeText}\n\nADDITIONAL NOTES:\n${contextText}`
+        : contextText;
+      formData.append('context_text', combinedContext);
 
-      // Send PDF file directly (no extraction)
-      if (resumeFile) {
+      // Only send full PDF if text extraction failed
+      if (resumeFile && !resumeText) {
         formData.append('file', resumeFile);
       }
 
@@ -184,11 +202,12 @@ function App() {
       // Estimate payload size (for debugging)
       let estimatedSize = 0;
       estimatedSize += new Blob([textInput]).size;
-      estimatedSize += new Blob([contextText]).size;
-      if (resumeFile) estimatedSize += resumeFile.size;
+      estimatedSize += new Blob([combinedContext]).size;
+      // Only count PDF if text extraction failed
+      if (resumeFile && !resumeText) estimatedSize += resumeFile.size;
       if (audioBlob) estimatedSize += audioBlob.size;
       const sizeMB = estimatedSize / (1024 * 1024);
-      console.log(`📦 Payload size: ${sizeMB.toFixed(2)}MB`);
+      console.log(`📦 Payload: ${sizeMB.toFixed(2)}MB (PDF: ${resumeText ? 'extracted text' : resumeFile ? 'full file' : 'none'})`);
 
       if (sizeMB > 4) {
         setError(`Payload too large (${sizeMB.toFixed(1)}MB). Try shorter recording or less text.`);
@@ -403,14 +422,16 @@ function App() {
                   id="resume-upload"
                 />
                 <label htmlFor="resume-upload" className="upload-label">
-                  <span className="upload-icon">{resumeFile ? '✅' : '📄'}</span>
+                  <span className="upload-icon">{resumeText ? '✅' : resumeFile ? '📄' : '📄'}</span>
                   <span className="upload-text">
                     {resumeFile ? resumeFile.name : 'Drop your resume or click to upload'}
                   </span>
                   <span className="upload-hint">
                     {resumeFile
-                      ? `Uploaded: ${(resumeFile.size / 1024).toFixed(1)}KB`
-                      : 'PDF files supported'}
+                      ? resumeText
+                        ? `✅ Compressed: ${(resumeText.length / 1024).toFixed(1)}KB (was ${(resumeFile.size / 1024).toFixed(1)}KB)`
+                        : `⚠️ ${(resumeFile.size / 1024).toFixed(1)}KB (extraction failed, using full file)`
+                      : 'PDF files supported (auto-compressed)'}
                   </span>
                 </label>
               </div>
