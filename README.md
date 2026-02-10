@@ -77,7 +77,7 @@ Open **http://localhost:5173** in your browser to begin!
 
 ## 🌍 Public Deployment (GitHub Pages)
 
-This repo is configured to deploy automatically to GitHub Pages when changes are pushed to the `work` branch. After the workflow completes, the live site will be available at:
+This repo is configured to deploy automatically to GitHub Pages when changes are pushed to the `main` branch. After the workflow completes, the live site will be available at:
 
 **https://fushanbobfan.github.io/Gemini-Hackathon/**
 
