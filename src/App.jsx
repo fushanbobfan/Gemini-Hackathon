@@ -21,7 +21,7 @@ function App() {
 
   const mediaRecorderRef = React.useRef(null);
   const cardsRef = useRef(null);
-  const API_BASE_URL = 'http://localhost:5002';
+  const API_BASE_URL = import.meta.env.PROD ? '' : 'http://localhost:5002';
 
   // Scroll animation for cards section
   useEffect(() => {
